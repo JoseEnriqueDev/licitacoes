@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Licitações Aqui - Sobre Nós</title>
+    <link rel="icon" type="image/x-icon" href="favicoin.svg">
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@700&family=Archivo+Black&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+        /* --- Preloader --- */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.5s ease, visibility 0s linear 0.5s;
+        }
+        #preloader.hide {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .loader-container {
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+        .loader-ring {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 80px;
+            height: 80px;
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #E66E00;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        .loader-logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 40px;
+            height: 40px;
+            transform: translate(-50%, -50%);
+            animation: rotateLogo 2s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes rotateLogo {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* --- Página Sobre Nós --- */
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            height: 100vh;
+            overflow: hidden; /* Evita barra de rolagem no desktop, o painel direito é rolável */
+        }
+
+        .left-panel {
+            flex: 1;
+            /* Use uma imagem que represente a missão da sua empresa, colaboração, inovação, etc. */
+            background-image: url('image.sobrenos.png'); /* Crie ou use uma imagem existente. Ex: equipe, gráfico, cidade */
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 30px;
+            box-sizing: border-box;
+            position: relative;
+            color: white;
+            text-align: center; /* Centraliza o texto no painel esquerdo */
+        }
+
+        .left-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            /* Gradiente escuro para garantir que o texto seja legível */
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent 70%);
+            z-index: 1;
+        }
+
+        .left-panel-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .left-panel h2 {
+            font-size: 36px; /* Tamanho maior para o título principal */
+            margin-bottom: 15px;
+            font-weight: 700; /* Mais negrito para destaque */
+            font-family: 'League Spartan', sans-serif; /* Usar fonte do logo para o título */
+        }
+
+        .left-panel p {
+            font-size: 18px;
+            margin-bottom: 0;
+            line-height: 1.5;
+        }
+
+        .right-panel {
+            width: 600px; /* Largura um pouco maior para acomodar mais texto */
+            background: white;
+            padding: 40px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* Alinha o conteúdo ao topo */
+            overflow-y: auto; /* Permite rolagem se o conteúdo for extenso */
+        }
+
+        .logo {
+            display: inline-block;
+            text-decoration: none;
+            color: #011632;
+            margin-bottom: 30px;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+        .logo:hover {
+            transform: scale(1.1);
+        }
+        .licita {
+            font-family: 'League Spartan', sans-serif;
+            font-weight: 700;
+            font-size: 30px;
+            line-height: 1;
+            display: inline-block;
+            position: relative;
+        }
+        .aqui {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 14px;
+            text-transform: uppercase;
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            transform: translate(15%, 50%);
+            color: #E66E00;
+        }
+
+        .about-content {
+            width: 100%;
+            max-width: 500px; /* Largura máxima para o bloco de texto */
+            text-align: left; /* Alinha o texto à esquerda */
+            margin-top: 20px;
+            color: #333;
+        }
+
+        .about-content h3 {
+            font-family: 'League Spartan', sans-serif;
+            color: #E66E00; /* Cor laranja para subtítulos */
+            font-size: 24px;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f3f3f3; /* Linha sutil para separar seções */
+            padding-bottom: 5px;
+        }
+
+        .about-content p {
+            font-size: 16px;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+
+        .values-list {
+            list-style: none; /* Remove os marcadores de lista padrão */
+            padding: 0;
+            margin-bottom: 20px;
+        }
+
+        .values-list li {
+            margin-bottom: 10px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .values-list li strong {
+            color: #E66E00; /* Destaca os valores em laranja */
+            font-weight: 600;
+        }
+
+
+        /* --- Responsividade --- */
+        @media (max-width: 992px) { /* Breakpoint para tablets */
+            .right-panel {
+                width: 500px; /* Ajusta largura em tablets */
+                padding: 30px;
+            }
+            .left-panel h2 {
+                font-size: 30px;
+            }
+            .left-panel p {
+                font-size: 16px;
+            }
+            .about-content h3 {
+                font-size: 22px;
+            }
+            .about-content p, .values-list li {
+                font-size: 15px;
+            }
+        }
+
+        @media (max-width: 768px) { /* Breakpoint para celulares */
+            body {
+                flex-direction: column;
+                overflow-y: auto;
+                height: auto;
+            }
+
+            .left-panel {
+                height: 280px; /* Altura fixa para a imagem em mobile */
+                flex: none;
+                padding: 20px;
+                justify-content: center;
+                text-align: center;
+            }
+
+            .left-panel::before {
+                background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent 70%);
+            }
+
+            .left-panel h2 {
+                font-size: 28px;
+            }
+
+            .left-panel p {
+                font-size: 15px;
+            }
+
+            .right-panel {
+                width: 100%;
+                box-shadow: none;
+                padding: 30px 20px;
+                border-radius: 0;
+                overflow-y: visible;
+            }
+
+            .logo {
+                margin-bottom: 20px;
+            }
+
+            .licita {
+                font-size: 26px;
+            }
+            .aqui {
+                font-size: 12px;
+            }
+
+            .about-content {
+                max-width: 100%; /* Ocupa toda a largura disponível */
+                text-align: left; /* Mantém alinhamento à esquerda */
+            }
+
+            .about-content h3 {
+                font-size: 20px;
+            }
+            .about-content p, .values-list li {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="preloader">
+        <div class="loader-container">
+            <div class="loader-ring"></div>
+            <img src="favicoin.svg" alt="Favicon girando" class="loader-logo">
+        </div>
+    </div>
+
+    <div class="left-panel">
+        <div class="left-panel-content">
+            <h2>Nossa História e Propósito</h2>
+            <p>Conectando oportunidades e transformando o mercado de licitações no Brasil.</p>
+        </div>
+    </div>
+
+    <div class="right-panel">
+        <a href="index.html" class="logo">
+            <span class="licita">Licitações</span>
+            <span class="aqui">AQUI</span>
+        </a>
+
+        <div class="about-content">
+            <h3>Quem Somos</h3>
+            <p>Na **Licitações AQUI**, acreditamos que o acesso justo e transparente às oportunidades públicas é fundamental para o crescimento de empresas de todos os portes. Fundada em 2023, nossa plataforma nasceu da necessidade de desburocratizar o processo de participação em licitações, tornando-o acessível e compreensível para todos.</p>
+
+            <h3>Nossa Missão</h3>
+            <p>Capacitar empresas, grandes e pequenas, a identificar, participar e vencer licitações públicas de forma eficiente e descomplicada, promovendo a transparência e o desenvolvimento econômico do país.</p>
+
+            <h3>Nossa Visão</h3>
+            <p>Ser a plataforma líder e mais confiável em licitações no Brasil, reconhecida pela inovação, facilidade de uso e pelo impacto positivo que geramos na economia e na sociedade.</p>
+
+            <h3>Nossos Valores</h3>
+            <ul class="values-list">
+                <li><strong>Transparência:</strong> Agimos com clareza e honestidade em todas as nossas operações.</li>
+                <li><strong>Inovação:</strong> Buscamos constantemente novas soluções para simplificar e aprimorar a experiência dos nossos usuários.</li>
+                <li><strong>Acessibilidade:</strong> Criamos ferramentas intuitivas que democratizam o acesso às licitações para todos.</li>
+                <li><strong>Compromisso:</strong> Dedicação total ao sucesso dos nossos clientes e ao desenvolvimento do ecossistema de licitações.</li>
+                <li><strong>Integridade:</strong> Ética e responsabilidade são a base de todas as nossas relações.</li>
+            </ul>
+
+            <p>Convidamos você a fazer parte dessa jornada e a descobrir como a Licitações AQUI pode impulsionar o futuro do seu negócio.</p>
+        </div>
+    </div>
+
+    <script>
+        // Preloader ao carregar a página
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('preloader');
+            preloader.classList.add('hide');
+            setTimeout(() => preloader.style.display = 'none', 500);
+        });
+    </script>
+
+</body>
+</html>

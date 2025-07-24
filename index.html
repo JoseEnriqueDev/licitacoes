@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Licitações Aqui</title>
+  <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@700&family=Archivo+Black&family=Poppins:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/x-icon" href="favicoin.svg" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* menu_crew.css */
+    .floating-menu {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 999;
+    }
+  
+    .menu-button {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: #E66E00;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 15px black;
+        cursor: pointer;
+        transition: transform 0.3s, background-color 0.3s;
+    }
+  
+    .menu-button:hover {
+        transform: scale(1.05);
+        background-color: #c35a00;
+    }
+  
+    .menu-button svg {
+        transition: transform 0.3s;
+    }
+  
+    .menu-button.active svg {
+        transform: rotate(45deg);
+    }
+  
+    .sub-menu {
+        position: absolute;
+        bottom: 75px;
+        right: 5px;
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+        width: 220px;
+        overflow: hidden;
+        visibility: hidden;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.3s;
+    }
+  
+    .sub-menu.active {
+        visibility: visible;
+        opacity: 1;
+        transform: translateY(0);
+    }
+  
+    .sub-menu-header {
+        padding: 15px 20px;
+        background-color: #f3f4f6;
+        font-weight: 600;
+        color: #c35a00;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+    }
+  
+    .sub-menu-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+    }
+  
+    .sub-menu-content.active {
+        max-height: 300px;
+    }
+  
+    .sub-menu-item {
+        padding: 12px 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #4b5563;
+        transition: background-color 0.2s;
+        cursor: pointer;
+    }
+  
+    .sub-menu-item:hover {
+        background-color: #f9fafb;
+        color: #4f46e5;
+    }
+  
+    .icon-container {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+    }
+  
+    .whatsapp { background-color: #e7f7ee; color: #25D366; }
+    .faq { background-color: #eef2ff; color: #6366f1; }
+    .help { background-color: #fef2f2; color: #ef4444; }
+    .instagram { background-color: #fdf2f8; color: #db2777; }
+    .facebook { background-color: #eff6ff; color: #1877f2; }
+    .linkedin { background-color: #eef2ff; color: #0a66c2; }
+    .twitter { background-color: #f3f4f6; color: #000000; }
+    .youtube { background-color: #fef2f2; color: #ff0000; }
+  
+    .chevron { transition: transform 0.3s; }
+    .chevron.active { transform: rotate(180deg); }
+  </style>
+  
+  <style>
+    /* Preloader */
+    #preloader {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: white;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      /* O preloader estará visível por padrão ao carregar a página */
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.5s ease, visibility 0s linear 0.5s; /* Transição para esconder */
+    }
+    /* Classe para esconder o preloader após o carregamento ou após o clique */
+    #preloader.hide {
+      opacity: 0;
+      visibility: hidden;
+    }
+    .loader-container {
+      position: relative;
+      width: 80px;
+      height: 80px;
+    }
+    .loader-ring {
+      position: absolute;
+      top: 0; left: 0;
+      width: 80px; height: 80px;
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #E66E00;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    .loader-logo {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 40px; height: 40px;
+      transform: translate(-50%, -50%);
+      animation: rotateLogo 2s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes rotateLogo {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #ffffff;
+      color: #011632;
+    }
+    header {
+      width: 100%;
+      height: 100px;
+      background-color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding-left: 200px;
+      border-bottom: 1px solid #E66E00;
+      box-sizing: border-box;
+    }
+    .logo {
+      position: relative;
+      display: inline-block;
+      color: #011632;
+      text-decoration: none;
+      margin-right: auto;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+    .logo:hover {
+      transform: scale(1.1);
+    }
+    .logo:active {
+      animation: reloadPage 0.2s;
+    }
+    .licita {
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 700;
+      font-size: 30px;
+      line-height: 1;
+      display: inline-block;
+      position: relative;
+    }
+    .aqui {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 14px;
+      text-transform: uppercase;
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      transform: translate(15%, 50%);
+      color: #E66E00;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      margin-right: 180px;
+    }
+    nav {
+      display: flex;
+      gap: 40px;
+      color: #E66E00;
+      font-size: 16px;
+      font-weight: 500;
+    }
+    nav a {
+      position: relative;
+      text-decoration: none;
+      color: #E66E00;
+      transition: color 0.3s ease;
+      font-weight: 600;
+    }
+    nav a::after {
+      content: "";
+      position: absolute;
+      width: 0%;
+      height: 2px;
+      bottom: -4px;
+      left: 0;
+      background-color: #E66E00;
+      transition: width 0.3s ease;
+    }
+    nav a:hover {
+      color: #c35a00;
+    }
+    nav a:hover::after {
+      width: 100%;
+    }
+    .buttons {
+      display: flex;
+      gap: 16px;
+    }
+    .buttons button {
+      background-color: #E66E00;
+      color: black; /* conforme seu original */
+      font-weight: bold;
+      padding: 8px 24px;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 1.2;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+    }
+    .buttons button:hover {
+      background-color: #c35a00;
+      box-shadow: 0 4px 10px rgba(230, 110, 0, 0.5);
+      transform: translateY(-2px);
+    }
+
+    /* Animação float e pulse */
+    .animate-float {
+      animation: float 6s ease-in-out infinite;
+    }
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+    .animate-pulse-slow {
+      animation: pulse-slow 2.5s infinite ease-in-out;
+    }
+    @keyframes pulse-slow {
+      0% { opacity: 0.2; }
+      50% { opacity: 0.4; }
+      100% { opacity: 0.2; }
+    }
+
+    /* CSS Customizado para o Slider Swiper */
+    .home__header__infos {
+        width: 100%;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        position: relative;
+    }
+
+    .swiper-slide {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 20px;
+        box-sizing: border-box;
+        background-color: #fff;
+        border-right: 1px solid #eee; /* Separador visual */
+        
+        /* MODIFICAÇÃO: Efeito Hover */
+        position: relative; /* Necessário para o posicionamento do ::after */
+        cursor: pointer;
+        transition: box-shadow 0.3s ease; /* Transição suave para a sombra */
+    }
+    
+    /* MODIFICAÇÃO: Cria a barrinha na base do slide */
+    .swiper-slide::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0%;
+        height: 4px; /* Altura da barrinha */
+        background-color: #E66E00;
+        transition: width 0.3s ease-in-out;
+    }
+    
+    /* MODIFICAÇÃO: Anima a barrinha e adiciona uma sombra ao passar o mouse */
+    .swiper-slide:hover::after {
+        width: 100%;
+    }
+    .swiper-slide:hover {
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+
+    .swiper-slide:last-child {
+        border-right: none;
+    }
+
+    .swiper-slide img {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 15px;
+    }
+
+    .swiper-slide h4 {
+        color: #E66E00; /* Cor laranja para o título */
+        font-size: 1.2em;
+        margin-bottom: 10px;
+        font-weight: 700; /* Adicionado para destaque */
+    }
+
+    .swiper-slide p {
+        color: #555; /* Cor do texto da descrição */
+        font-size: 0.9em;
+        line-height: 1.5;
+    }
+
+    /* Custom Controls Styling */
+    .controls {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+        gap: 15px;
+    }
+
+    .controls button {
+        background: none;
+        border: 1px solid #E66E00;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: background-color 0.3s, border-color 0.3s;
+    }
+
+    .controls button:hover {
+        background-color: #ffe0b3;
+    }
+
+    .controls button svg path {
+        fill: #E66E00;
+        stroke: #E66E00;
+    }
+
+    .controls button.swiper-button-disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        border-color: #ccc;
+    }
+
+    .controls button.swiper-button-disabled svg path {
+        fill: #ccc;
+        stroke: #ccc;
+    }
+
+    /* Custom Pagination Styling */
+    .swiper-pagination-custom {
+        display: flex;
+        gap: 8px;
+    }
+
+    .swiper-pagination-custom .swiper-pagination-bullet {
+        width: 10px;
+        height: 10px;
+        background-color: #ccc;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .swiper-pagination-custom .swiper-pagination-bullet-active {
+        background-color: #E66E00;
+    }
+
+    /* Responsive adjustments for the slider */
+    @media (max-width: 768px) {
+        .swiper-slide {
+            border-right: none;
+            border-bottom: 1px solid #eee;
+        }
+        .swiper-slide:last-child {
+            border-bottom: none;
+        }
+    }
+    @media (min-width: 769px) and (max-width: 1023px) {
+        .swiper-slide {
+            border-right: 1px solid #eee;
+            border-bottom: none;
+        }
+    }
+
+    /* --- Efeitos do Acordeão (Perguntas Frequentes) --- */
+    /* Animação do conteúdo */
+    .accordion-content {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-out, opacity 0.4s ease-out, padding 0.4s ease-out;
+      will-change: max-height, opacity, padding; /* Otimização de performance */
+    }
+
+    .accordion-content.active {
+      max-height: 200px; /* Um valor grande o suficiente para o conteúdo */
+      opacity: 1;
+      padding-top: 10px; /* Adiciona um padding quando aberto */
+      padding-bottom: 20px;
+    }
+
+    /* Rotação e cor do ícone de chevron */
+    .accordion-toggle-icon {
+      transition: transform 0.3s ease, color 0.3s ease;
+      display: inline-block; /* Para garantir que a rotação funcione corretamente */
+      color: #E66E00; /* Cor padrão */
+    }
+
+    .accordion-button.active .accordion-toggle-icon {
+      transform: rotate(180deg); /* Gira 180 graus quando ativo */
+      color: #c35a00; /* Muda a cor quando ativo */
+    }
+
+    /* Cor do texto do título do acordeão ao passar o mouse */
+    .accordion-button:hover {
+      color: #c35a00; /* Cor do texto no hover */
+    }
+    /* Cor do ícone de chevron ao passar o mouse */
+    .accordion-button:hover .accordion-toggle-icon {
+      color: #c35a00; /* Cor do ícone no hover */
+    }
+
+
+  </style>
+</head>
+<!-- menu_crew.html -->
+<div class="floating-menu">
+  <div class="menu-button" id="menuButton">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+      stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2L12 12"></path>
+      <path d="M5 5.3C3.4 6.8 2.5 8.8 2.5 11.1C2.5 15.6 6.2 19.2 10.7 19.2C11.6 19.2 12.5 19 13.3 18.7"></path>
+      <path d="M17.8 18.2C18.3 18 18.7 17.8 19.1 17.5C20.7 16.5 21.5 14.9 21.5 13C21.5 9.5 18.4 6.5 14.9 6.5C14 6.5 13.2 6.7 12.4 7"></path>
+      <path d="M17 11L17 3"></path>
+      <path d="M14 6L20 6"></path>
+    </svg>
+  </div>
+
+  <div class="sub-menu" id="subMenu">
+    <div class="sub-menu-header" id="supportHeader">
+      <div class="icon-container faq">
+        <i class="fas fa-headset"></i>
+      </div>
+      <span>Suporte</span>
+      <i class="fas fa-chevron-down ml-auto chevron" id="supportChevron"></i>
+    </div>
+    <div class="sub-menu-content" id="supportContent">
+      <div class="sub-menu-item">
+        <div class="icon-container whatsapp"><i class="fab fa-whatsapp"></i></div>
+        <span>WhatsApp</span>
+      </div>
+      <div class="sub-menu-item">
+        <div class="icon-container faq"><i class="fas fa-question-circle"></i></div>
+        <span>FAQ</span>
+      </div>
+      <div class="sub-menu-item">
+        <div class="icon-container help"><i class="fas fa-hands-helping"></i></div>
+        <span>Central de Ajuda</span>
+      </div>
+    </div>
+
+    <div class="sub-menu-header" id="socialHeader">
+      <div class="icon-container instagram"><i class="fas fa-share-alt"></i></div>
+      <span>Redes Sociais</span>
+      <i class="fas fa-chevron-down ml-auto chevron" id="socialChevron"></i>
+    </div>
+    <div class="sub-menu-content" id="socialContent">
+      <div class="sub-menu-item"><div class="icon-container instagram"><i class="fab fa-instagram"></i></div><span>Instagram</span></div>
+      <div class="sub-menu-item"><div class="icon-container facebook"><i class="fab fa-facebook-f"></i></div><span>Facebook</span></div>
+      <div class="sub-menu-item"><div class="icon-container linkedin"><i class="fab fa-linkedin-in"></i></div><span>LinkedIn</span></div>
+      <div class="sub-menu-item"><div class="icon-container twitter"><i class="fab fa-x-twitter"></i></div><span>Twitter (X)</span></div>
+      <div class="sub-menu-item"><div class="icon-container youtube"><i class="fab fa-youtube"></i></div><span>YouTube</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // menu_crew.js
+  const menuButton = document.getElementById('menuButton');
+  const subMenu = document.getElementById('subMenu');
+  const supportHeader = document.getElementById('supportHeader');
+  const supportContent = document.getElementById('supportContent');
+  const supportChevron = document.getElementById('supportChevron');
+  const socialHeader = document.getElementById('socialHeader');
+  const socialContent = document.getElementById('socialContent');
+  const socialChevron = document.getElementById('socialChevron');
+
+  let menuOpen = false;
+
+  menuButton.addEventListener('click', () => {
+    menuOpen = !menuOpen;
+    menuButton.classList.toggle('active', menuOpen);
+    subMenu.classList.toggle('active', menuOpen);
+
+    if (!menuOpen) {
+      supportContent.classList.remove('active');
+      supportChevron.classList.remove('active');
+      socialContent.classList.remove('active');
+      socialChevron.classList.remove('active');
+    }
+  });
+
+  supportHeader.addEventListener('click', () => {
+    supportContent.classList.toggle('active');
+    supportChevron.classList.toggle('active');
+  });
+
+  socialHeader.addEventListener('click', () => {
+    socialContent.classList.toggle('active');
+    socialChevron.classList.toggle('active');
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!menuButton.contains(e.target) && !subMenu.contains(e.target) && menuOpen) {
+      menuOpen = false;
+      menuButton.classList.remove('active');
+      subMenu.classList.remove('active');
+      supportContent.classList.remove('active');
+      supportChevron.classList.remove('active');
+      socialContent.classList.remove('active');
+      socialChevron.classList.remove('active');
+    }
+  });
+
+  const menuItems = document.querySelectorAll('.sub-menu-item');
+  menuItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const itemName = item.querySelector('span').textContent;
+      alert(`Você clicou em: ${itemName}`);
+    });
+  });
+</script>
+
+<body>
+
+  <div id="preloader">
+    <div class="loader-container">
+      <div class="loader-ring"></div>
+      <img src="favicoin.svg" alt="Logo girando" class="loader-logo" />
+    </div>
+  </div>
+
+  <header>
+    <a href="index.html" class="logo">
+      <span class="licita">Licitações</span>
+      <span class="aqui">AQUI</span>
+    </a>
+
+    <div class="header-right">
+      <nav>
+        <a href="sobrenos.html" id="sobrenosLink">Sobre Nós</a>
+        <a href="#">Suporte</a>
+        <a href="cursos.html" id="cursosGratisLink">Curso Grátis</a>
+      </nav>
+
+      <div class="buttons">
+        <button onclick="window.location.href='login.html'">Entrar</button>
+        <button onclick="window.location.href='cadastro.html'">Cadastre sua empresa</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="container mx-auto px-4 flex flex-col md:flex-row items-center py-16">
+    <div class="md:w-1/2 mb-12 md:mb-0">
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-[#011632] leading-tight mb-6">
+        Conectando <span class="text-[#E66E00]">empresas</span> e economizando em cada negociação
+      </h1>
+      <p class="text-xl md:text-2xl text-[#3D4A5C] mb-8 max-w-lg">
+        A melhor plataforma para se economizar dinheiro nas compras de sua empresa e vender para o Brasil todo.
+      </p>
+      <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+        <a class="bg-[#E66E00] hover:bg-[#c35a00] text-white px-8 py-3 rounded-2xl text-lg font-medium transition-all duration-300 transform hover:-translate-y-1 text-center" href="cadastro.html">
+          Cadastre-se gratuitamente
+        </a>
+        <a class="border-2 border-[#E66E00] text-[#E66E00] hover:bg-orange-50 px-8 py-3 rounded-2xl text-lg font-medium transition-all duration-300 text-center" href="#video-section">
+          Saiba mais
+        </a>
+      </div>
+    </div>
+    <div class="md:w-1/2 relative">
+      <div class="relative z-10 animate-float">
+        <svg class="w-full h-auto" viewBox="0 0 500 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="100" y="50" width="300" height="300" rx="20" fill="#FFF4E6"></rect>
+          <circle cx="250" cy="150" r="50" fill="#E66E00" opacity="0.8"></circle>
+          <path d="M150 200C150 177.909 167.909 160 190 160H310C332.091 160 350 177.909 350 200V280C350 302.091 332.091 320 310 320H190C167.909 320 150 302.091 150 280V200Z" fill="white"></path>
+          <circle cx="190" cy="220" r="15" fill="#E66E00"></circle>
+          <circle cx="250" cy="220" r="15" fill="#CBD2D9"></circle>
+          <circle cx="310" cy="220" r="15" fill="#CBD2D9"></circle>
+          <rect x="175" y="260" width="150" height="10" rx="5" fill="#E4E7EB"></rect>
+          <rect x="175" y="280" width="100" height="10" rx="5" fill="#E4E7EB"></rect>
+        </svg>
+      </div>
+      <div class="absolute top-1/4 -right-4 w-20 h-20 bg-[#E66E00] rounded-full opacity-30 animate-pulse-slow"></div>
+      <div class="absolute bottom-1/4 -left-8 w-32 h-32 bg-[#E66E00] rounded-full opacity-20 animate-pulse-slow"></div>
+    </div>
+  </section>
+
+  <section class="max-w-7xl mx-auto px-4 mt-16">
+    <div data-section="" class="home__header__infos active">
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <img src="https://effecti.com.br/wp-content/uploads/2023/07/1.svg" alt="+ Performance">
+                    <h4>+ Performance</h4>
+                    <p>Encontre as melhores oportunidades para o seu negócio</p>
+                </div>
+                <div class="swiper-slide">
+                    <img src="https://effecti.com.br/wp-content/uploads/2023/07/2.svg" alt="+ Praticidade">
+                    <h4>+ Praticidade</h4>
+                    <p>Cadastre as suas propostas com facilidade e agilidade </p>
+                </div>
+                <div class="swiper-slide">
+                    <img src="https://effecti.com.br/wp-content/uploads/2023/07/3.svg" alt="+ Otimização">
+                    <h4>+ Otimização</h4>
+                    <p>Dispute vários pregões ao mesmo tempo, de maneira segura e inteligente</p>
+                </div>
+                <div class="swiper-slide">
+                    <img src="https://effecti.com.br/wp-content/uploads/2023/07/4.svg" alt="+ Segurança">
+                    <h4>+ Segurança</h4>
+                    <p>Monitore o chat do pregão e não perca nenhuma convocação</p>
+                </div>
+            </div>
+        </div>
+        
+  </section>
+  <section id="video-section" class="w-full max-w-5xl mx-auto mt-16 pt-16 px-4">
+    <h2 class="text-2xl md:text-3xl font-bold text-center text-[#E66E00] mb-6">
+      Veja como funciona a Licitações Aqui
+    </h2>
+    <div class="relative w-3/4 mx-auto pb-[35%] h-0 overflow-hidden rounded-2xl shadow-lg">
+      <iframe
+        class="absolute top-0 left-0 w-full h-full"
+        src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+        title="Como funciona a Licitações Aqui"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+      ></iframe>
+    </div>
+  </section>
+
+  <section class="mt-24 bg-[#E66E00] text-black py-20">
+    <h3 class="text-4xl font-bold text-center leading-tight max-w-4xl mx-auto">
+      O jeito <span class="font-bold text-white">mais fácil e confiável</span> de economizar ou vender com sua empresa.
+    </h3>
+  </section>
+
+
+  <section id="impact-section" class="bg-white py-20 mt-24">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-4xl md:text-5xl font-bold text-center text-[#011632] mb-12">
+        Nosso impacto em <span class="text-[#E66E00]">2025</span>
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 text-center">
+        <div class="flex flex-col items-center">
+          <div class="flex items-baseline justify-center gap-2">
+            <p class="text-6xl font-extrabold text-[#E66E00] counter" data-target="136">0</p>
+            <span class="text-2xl font-semibold text-black">Bilhões</span>
+          </div>
+          <p class="text-lg mt-2 font-medium text-[#011632]">Movimentados na plataforma</p>
+        </div>
+        <div class="flex flex-col items-center">
+          <div class="flex items-baseline justify-center gap-2">
+            <p class="text-6xl font-extrabold text-[#E66E00] counter" data-target="125">0</p>
+            <span class="text-2xl font-semibold text-black">mil</span>
+          </div>
+          <p class="text-lg mt-2 font-medium text-[#011632]">Empresas cadastradas</p>
+        </div>
+        <div class="flex flex-col items-center">
+          <div class="flex items-baseline justify-center gap-2">
+            <p class="text-6xl font-extrabold text-[#E66E00] counter" data-target="1">0</p>
+            <span class="text-2xl font-semibold text-black">bilhão</span>
+          </div>
+          <p class="text-lg mt-2 font-medium text-[#011632]">Licitações concluídas</p>
+        </div>
+        <div class="flex flex-col items-center">
+          <div class="flex items-baseline justify-center gap-2">
+            <p class="text-6xl font-extrabold text-[#E66E00] counter" data-target="6">0</p>
+            <span class="text-2xl font-semibold text-black">Milhões</span>
+          </div>
+          <p class="text-lg mt-2 font-medium text-[#011632]">Fornecedores Ativos</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="bg-[#011632] py-20 text-center">
+    <div class="max-w-4xl mx-auto px-4">
+        <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">Pronto para <span class="text-[#E66E00]">Impulsionar</span> seus Negócios?</h2>
+        <p class="text-xl text-gray-300 mb-10">Cadastre-se gratuitamente e veja como a Licitações Aqui pode transformar suas compras e vendas</p>
+        <a class="bg-[#E66E00] hover:bg-[#c35a00] text-white px-10 py-4 rounded-full text-xl font-bold transition-all duration-300 transform hover:-translate-y-1 inline-block" href="cadastro.html">
+            Cadastre sua empresa
+        </a>
+    </div>
+</section>
+<section id="faq-section" class="py-20 bg-white">
+  <div class="max-w-4xl mx-auto px-4">
+      <h2 class="text-4xl md:text-5xl font-bold text-center text-[#011632] mb-12">Perguntas <span class="text-[#E66E00]">Frequentes</span></h2>
+      <div class="space-y-4">
+        <div class="border border-gray-200 rounded-lg">
+            <button class="accordion-button w-full text-left p-5 font-semibold text-lg text-[#011632] flex justify-between items-center" onclick="toggleAccordion(this)">
+                Como posso me cadastrar na plataforma?
+                <span class="accordion-toggle-icon text-2xl">
+                    <svg role="presentation" focusable="false" width="16" height="12" viewBox="0 0 8 6" fill="currentColor">
+                        <path d="m1 1.5 3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5"></path>
+                    </svg>
+                </span>
+            </button>
+            <div class="accordion-content px-5 pb-0 text-gray-700">
+                <p>O cadastro é simples! Clique em "Cadastre sua empresa" e siga os passos. Você precisará de algumas informações básicas da sua empresa.</p>
+            </div>
+        </div>
+        <div class="border border-gray-200 rounded-lg">
+            <button class="accordion-button w-full text-left p-5 font-semibold text-lg text-[#011632] flex justify-between items-center" onclick="toggleAccordion(this)">
+                Tem como vender para o governo?
+                <span class="accordion-toggle-icon text-2xl">
+                    <svg role="presentation" focusable="false" width="16" height="12" viewBox="0 0 8 6" fill="currentColor">
+                        <path d="m1 1.5 3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5"></path>
+                    </svg>
+                </span>
+            </button>
+            <div class="accordion-content px-5 pb-0 text-gray-700">
+                <p>Atualmente não, mas no futuro queremos adicionar em nossa plataforma.</p>
+            </div>
+        </div>
+        <div class="border border-gray-200 rounded-lg">
+            <button class="accordion-button w-full text-left p-5 font-semibold text-lg text-[#011632] flex justify-between items-center" onclick="toggleAccordion(this)">
+                Existe algum custo para usar a plataforma?
+                <span class="accordion-toggle-icon text-2xl">
+                    <svg role="presentation" focusable="false" width="16" height="12" viewBox="0 0 8 6" fill="currentColor">
+                        <path d="m1 1.5 3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.5"></path>
+                    </svg>
+                </span>
+            </button>
+            <div class="accordion-content px-5 pb-0 text-gray-700">
+                <p>Diferente de outras plataformas, não cobramos nada pra você ter acesso, basta se cadastrar.</p>
+            </div>
+        </div>
+      </div>
+  </div>
+</section>
+
+
+<script>
+  function toggleAccordion(button) {
+      const content = button.nextElementSibling;
+      const icon = button.querySelector('.accordion-toggle-icon');
+
+      // Alterna a classe 'active' no botão para controle de estilos CSS
+      button.classList.toggle('active');
+      // Alterna a classe 'active' no conteúdo para exibir/esconder com transição
+      content.classList.toggle('active');
+  }
+</script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+  <script>
+    // Animação simples dos números
+    const counters = document.querySelectorAll('.counter');
+    const animationDuration = 2000; // 2 segundos
+
+    function startCounterAnimation(counter) {
+      const target = +counter.getAttribute('data-target');
+      let start = 0;
+      const increment = target / (animationDuration / 20);
+
+      counter.textContent = '0';
+
+      function update() {
+        start += increment;
+        if (start < target) {
+          counter.textContent = Math.floor(start);
+          setTimeout(update, 20);
+        } else {
+          counter.textContent = target;
+        }
+      }
+      update();
+    }
+
+    const impactSection = document.getElementById('impact-section');
+    let animationTriggered = false;
+
+    if (impactSection) {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            if (!animationTriggered) {
+                counters.forEach(counter => startCounterAnimation(counter));
+                animationTriggered = true;
+            }
+          } else {
+            animationTriggered = false;
+          }
+        });
+      }, {
+        threshold: 0.5
+      });
+
+      observer.observe(impactSection);
+    }
+  </script>
+  
+
+  <script>
+    // --- Preloader ao carregar a página (restaurado) ---
+    window.addEventListener('load', () => {
+      const preloader = document.getElementById('preloader');
+      preloader.classList.add('hide'); // Adiciona a classe 'hide' para esconder o preloader
+      setTimeout(() => preloader.style.display = 'none', 500); // Garante que ele desapareça completamente após a transição
+    });
+
+    // --- Preloader ao clicar no link "Curso Grátis" ---
+    document.getElementById('cursosGratisLink').addEventListener('click', function(event) {
+      event.preventDefault(); // Impede a navegação imediata
+
+      const preloader = document.getElementById('preloader');
+      preloader.style.display = 'flex'; // Garante que esteja visível (caso já estivesse display:none)
+      preloader.classList.remove('hide'); // Remove a classe 'hide' para mostrar o preloader
+
+      // Simula um tempo de carregamento antes de redirecionar
+      setTimeout(() => {
+        window.location.href = this.href; // Redireciona após 1 segundo
+      }, 1000); // Ajuste este valor conforme necessário para a duração do preloader
+    });
+
+    // Scroll suave para botão "Saiba mais"
+    document.querySelector('a[href="#video-section"]').addEventListener('click', function(e) {
+      e.preventDefault();
+      document.querySelector('#video-section').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // JavaScript de Inicialização do Swiper AQUI
+    document.addEventListener('DOMContentLoaded', function() {
+        const swiper = new Swiper('.mySwiper', {
+            direction: 'horizontal',
+            loop: false,
+
+            slidesPerView: 2,
+            spaceBetween: 0, 
+
+            breakpoints: {
+                768: {
+                    slidesPerView: 1,
+                    spaceBetween: 0 
+                },
+                1024: {
+                    slidesPerView: 4,
+                    spaceBetween: 0 
+                }
+            },
+
+            pagination: {
+                el: '.swiper-pagination-custom',
+                clickable: true,
+                renderBullet: function (index, className) {
+                    return '<span class="' + className + '"></span>';
+                },
+            },
+
+            on: {
+                init: function () {
+                    this.update();
+                },
+                slideChange: function () {
+                    // Nenhuma ação necessária aqui para o efeito de hover
+                }
+            }
+        });
+        
+        if (swiper.slides && swiper.slides.length > 0) {
+              swiper.emit('slideChange');
+        }
+    });
+  </script>
+
+  <footer class="bg-[#011632] text-white py-12 mt-24">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="flex flex-col items-start">
+        <a href="index.html" class="logo mb-4 text-white hover:text-[#E66E00] transition-colors duration-300">
+          <span class="licita">Licitações</span>
+          <span class="aqui" style="color: #E66E00;">AQUI</span>
+        </a>
+        <p class="text-gray-300 text-sm">
+          Sua plataforma completa para licitações.<br>Conectando empresas e oportunidades.
+        </p>
+      </div>
+
+      <div>
+        <h4 class="text-lg font-semibold text-[#E66E00] mb-4">Navegação</h4>
+        <ul>
+          <li class="mb-2"><a href="index.html" class="text-gray-300 hover:text-[#E66E00] transition-colors duration-300">Início</a></li>
+          <li class="mb-2"><a href="sobrenos.html" class="text-gray-300 hover:text-[#E66E00] transition-colors duration-300">Sobre Nós</a></li>
+          <li class="mb-2"><a href="#">Suporte</a></li>
+          <li class="mb-2"><a href="cursos.html" class="text-gray-300 hover:text-[#E66E00] transition-colors duration-300">Curso Grátis</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="text-lg font-semibold text-[#E66E00] mb-4">Fale Conosco</h4>
+        <p class="text-gray-300 mb-2">Email: contato@licitacoesaqui.com</p>
+        <p class="text-gray-300 mb-4">Telefone: (24) XXXX-XXXX</p>
+        <p class="text-gray-300 mb-4">WhatsApp: (24) XXXX-XXXX</p>
+        <h4 class="text-lg font-semibold text-[#E66E00] mb-4">Siga-nos</h4>
+        <div class="flex space-x-2 text-white">
+          <a href="#" class="hover:text-[#E66E00] transition-colors duration-300" aria-label="Facebook">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33V22C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" />
+            </svg>
+          </a>
+          <a href="#" class="hover:text-[#E66E00] transition-colors duration-300" aria-label="Instagram">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.792.058.97.045 1.75.243 2.406.512.66.27 1.258.636 1.815 1.192.556.556.922 1.155 1.192 1.81.269.656.467 1.436.512 2.407.045 1.008.058 1.358.058 3.792s-.013 2.784-.058 3.792c-.045.97-.243 1.75-.512 2.406-.27.66-.636 1.258-1.192 1.815-.556.556-1.155.922-1.192-1.81-.269-.656-.467-1.436-.512-2.407-.045-1.008-.058-1.358-.058-3.792s.013-2.784.058-3.792c.045-.97.243 1.75.512-2.406.27-.66.636-1.258 1.192-1.815.556-.556 1.155-.922 1.81-1.192.656-.269 1.436-.467 2.407-.512C9.517 2.013 9.867 2 12.315 2zm0 2.138c-2.073 0-2.31.009-3.136.046-.8.036-1.25.17-1.57.302-.32.13-.56.29-.75.48a2.583 2.583 0 00-.75.75c-.19.19-.35.43-.48.75-.13.32-.266.77-.302 1.57-.037.826-.046 1.063-.046 3.136s.009 2.31.046 3.136c.036.8.17 1.25.302 1.57.13.32.29.56.48.75.19.19.43.35.75.75.32.13.77.266 1.57.302.826.037 1.063.046 3.136.046s2.31-.009 3.136-.046c.8-.036 1.25-.17 1.57-.302.32-.13.56.29.75-.48.19-.19.35-.43.75-.75.13-.32.266-.77.302-1.57-.037-.826-.046-1.063-.046-3.136s-.009-2.31-.046-3.136c-.036-.8-.17-1.25-.302-1.57-.13-.32-.29-.56-.48-.75a2.583 2.583 0 00-.75-.75c-.19-.19-.43-.35-.75-.48-.32-.13-.77-.266-1.57-.302C14.625 4.147 14.388 4.138 12.315 4.138zM12.315 6.84a5.163 5.163 0 100 10.326 5.163 5.163 0 000-10.326zm0 2.138a3.025 3.025 0 110 6.05 3.025 3.025 0 010-6.05zm6.577-4.707a1.218 1.218 0 100 2.436 1.218 1.218 0 000-2.436z" clip-rule="evenodd" />
+            </svg>
+          </a>
+          <a href="#" class="hover:text-[#E66E00] transition-colors duration-300" aria-label="LinkedIn">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill-rule="evenodd" d="M19.05 19.05h-3.69v-5.263c0-1.252-.023-2.868-1.742-2.868-1.743 0-2.003 1.362-2.003 2.775v5.356H9.05V9.45H12.7v1.64h.05c.504-.848 1.735-1.743 3.582-1.743 3.84 0 4.55 2.52 4.55 5.802v6.62H19.05zM5.31 7.27a2.27 2.27 0 110-4.54 2.27 2.27 0 010 4.54zM6.99 9.45H3.69v9.6H6.99V9.45z" clip-rule="evenodd" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="mt-8 pt-8 border-t border-gray-700 text-center text-gray-400 text-sm">
+      © 2025 Licitações Aqui. Todos os direitos reservados.
+    </div>
+  </footer>
+
+</body>
+</html>

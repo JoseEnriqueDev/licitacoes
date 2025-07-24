@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Licitações Aqui - Cursos Gratuitos</title>
+  <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@700&family=Archivo+Black&family=Poppins:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/x-icon" href="favicoin.svg" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+  <style>
+    /* Preloader */
+    #preloader {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: white;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .loader-container {
+      position: relative;
+      width: 80px;
+      height: 80px;
+    }
+    .loader-ring {
+      position: absolute;
+      top: 0; left: 0;
+      width: 80px; height: 80px;
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #E66E00;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    .loader-logo {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 40px; height: 40px;
+      transform: translate(-50%, -50%);
+      animation: rotateLogo 2s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes rotateLogo {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #ffffff;
+      color: #011632;
+    }
+    header {
+      width: 100%;
+      height: 100px;
+      background-color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding-left: 200px;
+      border-bottom: 1px solid #E66E00;
+      box-sizing: border-box;
+    }
+    .logo {
+      position: relative;
+      display: inline-block;
+      color: #011632;
+      text-decoration: none;
+      margin-right: auto;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+    .logo:hover {
+      transform: scale(1.1);
+    }
+    .logo:active {
+      animation: reloadPage 0.2s;
+    }
+    .licita {
+      font-family: 'League Spartan', sans-serif;
+      font-weight: 700;
+      font-size: 30px;
+      line-height: 1;
+      display: inline-block;
+      position: relative;
+    }
+    .aqui {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 14px;
+      text-transform: uppercase;
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      transform: translate(15%, 50%);
+      color: #E66E00;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      margin-right: 180px;
+    }
+    nav {
+      display: flex;
+      gap: 40px;
+      color: #E66E00;
+      font-size: 16px;
+      font-weight: 500;
+    }
+    nav a {
+      position: relative;
+      text-decoration: none;
+      color: #E66E00;
+      transition: color 0.3s ease;
+      font-weight: 600;
+    }
+    nav a::after {
+      content: "";
+      position: absolute;
+      width: 0%;
+      height: 2px;
+      bottom: -4px;
+      left: 0;
+      background-color: #E66E00;
+      transition: width 0.3s ease;
+    }
+    nav a:hover {
+      color: #c35a00;
+    }
+    nav a:hover::after {
+      width: 100%;
+    }
+    .buttons {
+      display: flex;
+      gap: 16px;
+    }
+    .buttons button {
+      background-color: #E66E00;
+      color: black; /* conforme seu original */
+      font-weight: bold;
+      padding: 8px 24px;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      line-height: 1.2;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+    }
+    .buttons button:hover {
+      background-color: #c35a00;
+      box-shadow: 0 4px 10px rgba(230, 110, 0, 0.5);
+      transform: translateY(-2px);
+    }
+
+    /* Animação float e pulse */
+    .animate-float {
+      animation: float 6s ease-in-out infinite;
+    }
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+    .animate-pulse-slow {
+      animation: pulse-slow 2.5s infinite ease-in-out;
+    }
+    @keyframes pulse-slow {
+      0% { opacity: 0.2; }
+      50% { opacity: 0.4; }
+      100% { opacity: 0.2; }
+    }
+
+    /* CSS Customizado para o Slider Swiper */
+    .home__header__infos {
+        width: 100%;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        position: relative;
+    }
+
+    .swiper-slide {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 20px;
+        box-sizing: border-box;
+        background-color: #fff;
+        border-right: 1px solid #eee; /* Separador visual */
+        
+        /* MODIFICAÇÃO: Efeito Hover */
+        position: relative; /* Necessário para o posicionamento do ::after */
+        cursor: pointer;
+        transition: box-shadow 0.3s ease; /* Transição suave para a sombra */
+    }
+    
+    /* MODIFICAÇÃO: Cria a barrinha na base do slide */
+    .swiper-slide::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0%;
+        height: 4px; /* Altura da barrinha */
+        background-color: #E66E00;
+        transition: width 0.3s ease-in-out;
+    }
+    
+    /* MODIFICAÇÃO: Anima a barrinha e adiciona uma sombra ao passar o mouse */
+    .swiper-slide:hover::after {
+        width: 100%;
+    }
+    .swiper-slide:hover {
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+
+    .swiper-slide:last-child {
+        border-right: none;
+    }
+
+    .swiper-slide img {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 15px;
+    }
+
+    .swiper-slide h4 {
+        color: #E66E00; /* Cor laranja para o título */
+        font-size: 1.2em;
+        margin-bottom: 10px;
+        font-weight: 700; /* Adicionado para destaque */
+    }
+
+    .swiper-slide p {
+        color: #555; /* Cor do texto da descrição */
+        font-size: 0.9em;
+        line-height: 1.5;
+    }
+
+    /* Custom Controls Styling */
+    .controls {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+        gap: 15px;
+    }
+
+    .controls button {
+        background: none;
+        border: 1px solid #E66E00;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: background-color 0.3s, border-color 0.3s;
+    }
+
+    .controls button:hover {
+        background-color: #ffe0b3;
+    }
+
+    .controls button svg path {
+        fill: #E66E00;
+        stroke: #E66E00;
+    }
+
+    .controls button.swiper-button-disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        border-color: #ccc;
+    }
+
+    .controls button.swiper-button-disabled svg path {
+        fill: #ccc;
+        stroke: #ccc;
+    }
+
+    /* Custom Pagination Styling */
+    .swiper-pagination-custom {
+        display: flex;
+        gap: 8px;
+    }
+
+    .swiper-pagination-custom .swiper-pagination-bullet {
+        width: 10px;
+        height: 10px;
+        background-color: #ccc;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .swiper-pagination-custom .swiper-pagination-bullet-active {
+        background-color: #E66E00;
+    }
+
+    /* Responsive adjustments for the slider */
+    @media (max-width: 768px) {
+        .swiper-slide {
+            border-right: none;
+            border-bottom: 1px solid #eee;
+        }
+        .swiper-slide:last-child {
+            border-bottom: none;
+        }
+    }
+    @media (min-width: 769px) and (max-width: 1023px) {
+        .swiper-slide {
+            border-right: 1px solid #eee;
+            border-bottom: none;
+        }
+    }
+
+    /* --- Efeitos do Acordeão (Perguntas Frequentes) --- */
+    /* Animação do conteúdo */
+    .accordion-content {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-out, opacity 0.4s ease-out, padding 0.4s ease-out;
+      will-change: max-height, opacity, padding; /* Otimização de performance */
+    }
+
+    .accordion-content.active {
+      max-height: 200px; /* Um valor grande o suficiente para o conteúdo */
+      opacity: 1;
+      padding-top: 10px; /* Adiciona um padding quando aberto */
+      padding-bottom: 20px;
+    }
+
+    /* Rotação e cor do ícone de chevron */
+    .accordion-toggle-icon {
+      transition: transform 0.3s ease, color 0.3s ease;
+      display: inline-block; /* Para garantir que a rotação funcione corretamente */
+      color: #E66E00; /* Cor padrão */
+    }
+
+    .accordion-button.active .accordion-toggle-icon {
+      transform: rotate(180deg); /* Gira 180 graus quando ativo */
+      color: #c35a00; /* Muda a cor quando ativo */
+    }
+
+    /* Cor do texto do título do acordeão ao passar o mouse */
+    .accordion-button:hover {
+      color: #c35a00; /* Cor do texto no hover */
+    }
+    /* Cor do ícone de chevron ao passar o mouse */
+    .accordion-button:hover .accordion-toggle-icon {
+      color: #c35a00; /* Cor do ícone no hover */
+    }
+
+    /* Estilos para cards de cursos */
+    .course-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .course-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="preloader">
+    <div class="loader-container">
+      <div class="loader-ring"></div>
+      <img src="favicoin.svg" alt="Logo girando" class="loader-logo" />
+    </div>
+  </div>
+
+  <header>
+    <a href="index.html" class="logo" onclick="location.reload()">
+      <span class="licita">Licitações</span>
+      <span class="aqui">AQUI</span>
+    </a>
+
+    <div class="header-right">
+      <nav>
+        <a href="sobrenos.html" id="sobrenosLink">Sobre Nós</a>
+        <a href="#">Suporte</a>
+        <a href="cursos.html" id="cursosGratisLink">Curso Grátis</a>
+      </nav>
+
+      <div class="buttons">
+        <button onclick="window.location.href='login.html'">Entrar</button>
+        <button onclick="window.location.href='cadastro.html'">Cadastre sua empresa</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="container mx-auto px-4 py-16 text-center">
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-[#011632] leading-tight mb-6">
+        Aprenda a Vender e Comprar com Nossos <span class="text-[#E66E00]">Cursos Gratuitos</span>
+      </h1>
+      <p class="text-xl md:text-2xl text-[#3D4A5C] mb-8 max-w-3xl mx-auto">
+        Desenvolva suas habilidades em licitações e otimize seus negócios com nosso conteúdo exclusivo e totalmente gratuito.
+      </p>
+    </section>
+
+    <section class="container mx-auto px-4 py-12">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center course-card">
+          <img src="https://via.placeholder.com/150/FF8C00/FFFFFF?text=Curso+1" alt="Curso Básico de Licitações" class="w-32 h-32 mb-4 rounded-full object-cover">
+          <h3 class="text-2xl font-bold text-[#011632] mb-3">Introdução às Licitações Públicas</h3>
+          <p class="text-gray-700 mb-6">Aprenda os conceitos fundamentais do processo licitatório, ideal para iniciantes.</p>
+          <a href="#" class="bg-[#E66E00] hover:bg-[#c35a00] text-white px-6 py-2 rounded-full font-medium transition-all duration-300">
+            Ver Curso
+          </a>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center course-card">
+          <img src="https://via.placeholder.com/150/007BFF/FFFFFF?text=Curso+2" alt="Curso de Negociação" class="w-32 h-32 mb-4 rounded-full object-cover">
+          <h3 class="text-2xl font-bold text-[#011632] mb-3">Técnicas Essenciais de Negociação</h3>
+          <p class="text-gray-700 mb-6">Domine estratégias para negociar melhor e obter os melhores preços em suas compras.</p>
+          <a href="#" class="bg-[#E66E00] hover:bg-[#c35a00] text-white px-6 py-2 rounded-full font-medium transition-all duration-300">
+            Ver Curso
+          </a>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center course-card">
+          <img src="https://via.placeholder.com/150/28A745/FFFFFF?text=Curso+3" alt="Curso de Documentação" class="w-32 h-32 mb-4 rounded-full object-cover">
+          <h3 class="text-2xl font-bold text-[#011632] mb-3">Documentação em Processos Licitatórios</h3>
+          <p class="text-gray-700 mb-6">Entenda a documentação necessária para participar de licitações sem erros.</p>
+          <a href="#" class="bg-[#E66E00] hover:bg-[#c35a00] text-white px-6 py-2 rounded-full font-medium transition-all duration-300">
+            Ver Curso
+          </a>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center course-card">
+            <img src="https://via.placeholder.com/150/FFD700/FFFFFF?text=Curso+4" alt="Curso de Pregão Eletrônico" class="w-32 h-32 mb-4 rounded-full object-cover">
+            <h3 class="text-2xl font-bold text-[#011632] mb-3">Guia Completo de Pregão Eletrônico</h3>
+            <p class="text-gray-700 mb-6">Navegue com confiança pelos pregões eletrônicos e aumente suas chances de sucesso.</p>
+            <a href="#" class="bg-[#E66E00] hover:bg-[#c35a00] text-white px-6 py-2 rounded-full font-medium transition-all duration-300">
+              Ver Curso
+            </a>
+          </div>
+
+          <div class="bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center course-card">
+            <img src="https://via.placeholder.com/150/6C757D/FFFFFF?text=Curso+5" alt="Curso de Vendas para o Governo" class="w-32 h-32 mb-4 rounded-full object-cover">
+            <h3 class="text-2xl font-bold text-[#011632] mb-3">Como Vender para o Governo</h3>
+            <p class="text-gray-700 mb-6">Descubra as particularidades e o potencial de vender produtos e serviços para o setor público.</p>
+            <a href="#" class="bg-[#E66E00] hover:bg-[#c35a00] text-white px-6 py-2 rounded-full font-medium transition-all duration-300">
+              Ver Curso
+            </a>
+          </div>
+
+          <div class="bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center course-card">
+            <img src="https://via.placeholder.com/150/6F42C1/FFFFFF?text=Curso+6" alt="Curso de Boas Práticas" class="w-32 h-32 mb-4 rounded-full object-cover">
+            <h3 class="text-2xl font-bold text-[#011632] mb-3">Boas Práticas em Compras Governamentais</h3>
+            <p class="text-gray-700 mb-6">Dicas e truques para garantir que suas compras sigam as melhores práticas e leis.</p>
+            <a href="#" class="bg-[#E66E00] hover:bg-[#c35a00] text-white px-6 py-2 rounded-full font-medium transition-all duration-300">
+              Ver Curso
+            </a>
+          </div>
+      </div>
+    </section>
+
+    <section class="bg-[#011632] py-20 text-center mt-16">
+        <div class="max-w-4xl mx-auto px-4">
+            <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">Pronto para <span class="text-[#E66E00]">Impulsionar</span> seus Negócios?</h2>
+            <p class="text-xl text-gray-300 mb-10">Cadastre-se gratuitamente e veja como a Licitações Aqui pode transformar suas compras e vendas</p>
+            <a class="bg-[#E66E00] hover:bg-[#c35a00] text-white px-10 py-4 rounded-full text-xl font-bold transition-all duration-300 transform hover:-translate-y-1 inline-block" href="cadastro.html">
+                Cadastre sua empresa
+            </a>
+        </div>
+    </section>
+  </main>
+
+  <footer class="bg-[#011632] text-white py-12 mt-24">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="flex flex-col items-start">
+        <a href="index.html" class="logo mb-4 text-white hover:text-[#E66E00] transition-colors duration-300">
+          <span class="licita">Licitações</span>
+          <span class="aqui" style="color: #E66E00;">AQUI</span>
+        </a>
+        <p class="text-gray-300 text-sm">
+          Sua plataforma completa para licitações.<br>Conectando empresas e oportunidades.
+        </p>
+      </div>
+
+      <div>
+        <h4 class="text-lg font-semibold text-[#E66E00] mb-4">Navegação</h4>
+        <ul>
+          <li class="mb-2"><a href="index.html" class="text-gray-300 hover:text-[#E66E00] transition-colors duration-300">Início</a></li>
+          <li class="mb-2"><a href="sobrenos.html" class="text-gray-300 hover:text-[#E66E00] transition-colors duration-300">Sobre Nós</a></li>
+          <li class="mb-2"><a href="#">Suporte</a></li>
+          <li class="mb-2"><a href="cursos.html" class="text-gray-300 hover:text-[#E66E00] transition-colors duration-300">Curso Grátis</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="text-lg font-semibold text-[#E66E00] mb-4">Fale Conosco</h4>
+        <p class="text-gray-300 mb-2">Email: contato@licitacoesaqui.com</p>
+        <p class="text-gray-300 mb-4">Telefone: (24) XXXX-XXXX</p>
+        <p class="text-gray-300 mb-4">WhatsApp: (24) XXXX-XXXX</p>
+        <h4 class="text-lg font-semibold text-[#E66E00] mb-4">Siga-nos</h4>
+        <div class="flex space-x-2 text-white">
+          <a href="#" class="hover:text-[#E66E00] transition-colors duration-300" aria-label="Facebook">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill-rule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33V22C18.343 21.128 22 16.991 22 12z" clip-rule="evenodd" />
+            </svg>
+          </a>
+          <a href="#" class="hover:text-[#E66E00] transition-colors duration-300" aria-label="Instagram">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill-rule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.792.058.97.045 1.75.243 2.406.512.66.27 1.258.636 1.815 1.192.556.556.922 1.155 1.192 1.81.269.656.467 1.436.512 2.407.045 1.008.058 1.358.058 3.792s-.013 2.784-.058 3.792c-.045.97-.243 1.75-.512 2.406-.27.66-.636 1.258-1.192 1.815-.556.556-1.155.922-1.192-1.81-.269-.656-.467-1.436-.512-2.407-.045-1.008-.058-1.358-.058-3.792s.013-2.784.058-3.792c.045-.97.243 1.75.512-2.406.27-.66.636-1.258 1.192-1.815.556-.556 1.155-.922 1.81-1.192.656-.269 1.436-.467 2.407-.512C9.517 2.013 9.867 2 12.315 2zm0 2.138c-2.073 0-2.31.009-3.136.046-.8.036-1.25.17-1.57.302-.32.13-.56.29-.75.48a2.583 2.583 0 00-.75.75c-.19.19-.35.43-.48.75-.13.32-.266.77-.302 1.57-.037.826-.046 1.063-.046 3.136s.009 2.31.046 3.136c.036.8.17 1.25.302 1.57.13.32.29.56.48.75.19.19.43.35.75.75.32.13.77.266 1.57.302.826.037 1.063.046 3.136.046s2.31-.009 3.136-.046c.8-.036 1.25-.17 1.57-.302.32-.13.56.29.75-.48.19-.19.35-.43.75-.75.13-.32.266-.77.302-1.57-.037-.826-.046-1.063-.046-3.136s-.009-2.31-.046-3.136c-.036-.8-.17-1.25-.302-1.57-.13-.32-.29-.56-.48-.75a2.583 2.583 0 00-.75-.75c-.19-.19-.43-.35-.75-.48-.32-.13-.77-.266-1.57-.302C14.625 4.147 14.388 4.138 12.315 4.138zM12.315 6.84a5.163 5.163 0 100 10.326 5.163 5.163 0 000-10.326zm0 2.138a3.025 3.025 0 110 6.05 3.025 3.025 0 010-6.05zm6.577-4.707a1.218 1.218 0 100 2.436 1.218 1.218 0 000-2.436z" clip-rule="evenodd" />
+            </svg>
+          </a>
+          <a href="#" class="hover:text-[#E66E00] transition-colors duration-300" aria-label="LinkedIn">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill-rule="evenodd" d="M19.05 19.05h-3.69v-5.263c0-1.252-.023-2.868-1.742-2.868-1.743 0-2.003 1.362-2.003 2.775v5.356H9.05V9.45H12.7v1.64h.05c.504-.848 1.735-1.743 3.582-1.743 3.84 0 4.55 2.52 4.55 5.802v6.62H19.05zM5.31 7.27a2.27 2.27 0 110-4.54 2.27 2.27 0 010 4.54zM6.99 9.45H3.69v9.6H6.99V9.45z" clip-rule="evenodd" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="mt-8 pt-8 border-t border-gray-700 text-center text-gray-400 text-sm">
+      © 2025 Licitações Aqui. Todos os direitos reservados.
+    </div>
+  </footer>
+
+  <script>
+    // Preloader
+    window.addEventListener('load', () => {
+      const preloader = document.getElementById('preloader');
+      preloader.style.opacity = '0';
+      setTimeout(() => preloader.style.display = 'none', 500);
+    });
+
+    // Se a página de cursos não tiver um Swiper ou contador, remova os scripts relacionados para otimização
+    // if (document.querySelector('.mySwiper')) {
+    //   // Código do Swiper
+    // }
+    // if (document.getElementById('impact-section')) {
+    //   // Código do contador
+    // }
+
+    // Funções de acordeão não são necessárias nesta página, a menos que você adicione FAQs aqui.
+    // Se não adicionar, pode remover a função toggleAccordion e o script de acordeão para otimização.
+  </script>
+
+</body>
+</html>

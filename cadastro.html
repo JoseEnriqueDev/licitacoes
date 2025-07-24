@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Licitações Aqui - Cadastro</title>
+    <link rel="icon" type="image/x-icon" href="favicoin.svg" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=League+Spartan:wght@700&family=Archivo+Black&display=swap" rel="stylesheet" />
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <style>
+        /* --- Preloader --- */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.5s ease, visibility 0s linear 0.5s;
+        }
+        #preloader.hide {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .loader-container {
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+        .loader-ring {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 80px;
+            height: 80px;
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #E66E00;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        .loader-logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 40px;
+            height: 40px;
+            transform: translate(-50%, -50%);
+            animation: rotateLogo 2s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes rotateLogo {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* --- Página de Cadastro (Inspirada no Login) --- */
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            height: 100vh;
+            overflow: hidden; /* Evita a barra de rolagem no layout desktop */
+        }
+
+        .left-panel {
+            flex: 1;
+            background-image: url('image.cadastro.png'); /* Mesma imagem de fundo do login */
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end; /* Conteúdo no final do painel */
+            padding: 30px;
+            box-sizing: border-box;
+            position: relative;
+            color: white;
+        }
+
+        .left-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent 70%); /* Gradiente escuro na parte inferior */
+            z-index: 1;
+        }
+
+        .left-panel-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .left-panel h2 {
+            font-size: 30px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .left-panel p {
+            font-size: 16px;
+            margin-bottom: 0;
+        }
+
+        .right-panel {
+            width: 450px; /* Largura fixa para o painel de formulário no desktop */
+            background: white;
+            padding: 40px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto; /* Permite rolagem no painel de cadastro se o conteúdo for grande */
+        }
+
+        .logo {
+            display: inline-block;
+            text-decoration: none;
+            color: #011632;
+            margin-bottom: 30px; /* Espaçamento do logo */
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+        .logo:hover {
+            transform: scale(1.1);
+        }
+        .licita {
+            font-family: 'League Spartan', sans-serif;
+            font-weight: 700;
+            font-size: 30px;
+            line-height: 1;
+            display: inline-block;
+            position: relative;
+        }
+        .aqui {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 14px;
+            text-transform: uppercase;
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            transform: translate(15%, 50%);
+            color: #E66E00;
+        }
+        .cadastro-container {
+            width: 100%;
+            max-width: 400px; /* Alinhado com o login-container */
+        }
+        h2.form-title { /* Novo estilo para o título dentro do formulário */
+            color: #011632;
+            margin-bottom: 25px; /* Ajuste para o espaçamento do título do formulário */
+            text-align: center;
+            font-size: 24px;
+        }
+
+        /* Estilos para o grupo de input com ícones */
+        .input-group {
+            position: relative;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 12px 12px 45px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border 0.3s ease;
+            box-sizing: border-box;
+            height: 45px;
+        }
+
+        /* Ajuste de padding-right para campos de senha para o ícone do olho */
+        input[type="password"] {
+            padding-right: 45px;
+        }
+
+        /* Foco dos inputs */
+        .input-group input:focus {
+            border: 2px solid #E66E00;
+            outline: none;
+        }
+
+        /* Ícone dentro do input (à esquerda) */
+        .input-group .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            font-size: 16px;
+            pointer-events: none;
+        }
+
+        /* Ícone do olho (à direita) */
+        .input-group .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999; /* Mantido cinza para combinar com os outros ícones */
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #E66E00;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #c35a00;
+        }
+        .link {
+            text-align: center;
+            margin-top: 25px; /* Aumentado para melhor espaçamento */
+            font-size: 14px;
+        }
+        .link a {
+            color: #E66E00;
+            text-decoration: none;
+        }
+        .link a:hover {
+            text-decoration: underline;
+        }
+
+        /* --- Responsividade --- */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column; /* Coloca os painéis um sobre o outro */
+                overflow-y: auto; /* Permite rolagem no body quando em mobile */
+                height: auto; /* Altura automática para permitir rolagem */
+            }
+
+            .left-panel {
+                height: 250px; /* Altura fixa para a imagem em mobile */
+                flex: none; /* Remove o flex grow para altura fixa */
+                padding: 20px; /* Ajusta padding */
+                justify-content: center; /* Centraliza o conteúdo verticalmente */
+                text-align: center; /* Centraliza o texto */
+            }
+
+            .left-panel::before {
+                background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent 70%); /* Gradiente mais suave */
+            }
+
+            .left-panel h2 {
+                font-size: 24px; /* Reduz o tamanho da fonte */
+            }
+
+            .left-panel p {
+                font-size: 14px; /* Reduz o tamanho da fonte */
+            }
+
+            .right-panel {
+                width: 100%; /* Ocupa toda a largura disponível */
+                box-shadow: none; /* Remove a sombra em mobile para um visual mais limpo */
+                padding: 30px 20px; /* Ajusta padding */
+                border-radius: 0; /* Remove border-radius */
+                overflow-y: visible; /* Garante que o conteúdo role com a página */
+            }
+
+            .logo {
+                margin-bottom: 20px; /* Ajusta espaçamento do logo */
+            }
+
+            .licita {
+                font-size: 26px; /* Reduz o tamanho da fonte do logo */
+            }
+            .aqui {
+                font-size: 12px; /* Reduz o tamanho da fonte do "AQUI" */
+            }
+
+            h2.form-title {
+                font-size: 20px; /* Reduz o tamanho do título do formulário */
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="preloader">
+        <div class="loader-container">
+            <div class="loader-ring"></div>
+            <img src="favicoin.svg" alt="Logo girando" class="loader-logo">
+        </div>
+    </div>
+
+    <div class="left-panel">
+        <div class="left-panel-content">
+            <h2>Cadastre-se e descubra <br> um novo mundo de licitações!</h2>
+            <p>Junte-se à nossa comunidade e comece a participar!</p>
+        </div>
+    </div>
+
+    <div class="right-panel">
+        <a href="index.html" class="logo">
+            <span class="licita">Licitações</span>
+            <span class="aqui">AQUI</span>
+        </a>
+
+        <div class="cadastro-container"
+            <form id="formCadastro" action="#" method="post">
+                <div class="input-group">
+                    <i class="fa-solid fa-user input-icon"></i>
+                    <input type="text" placeholder="Nome completo*" required>
+                </div>
+
+                <div class="input-group">
+                    <i class="fa-brands fa-whatsapp input-icon"></i>
+                    <input type="tel" id="whatsapp" placeholder="WhatsApp (opcional)" maxlength="15">
+                </div>
+
+                <div class="input-group">
+                    <i class="fa-solid fa-envelope input-icon"></i>
+                    <input type="email" placeholder="E-mail*" required>
+                </div>
+
+                <div class="input-group">
+                    <i class="fa-solid fa-building input-icon"></i>
+                    <input id="cnpj" type="text" placeholder="CNPJ*" maxlength="18" required>
+                </div>
+
+                <div class="input-group">
+                    <i class="fa-solid fa-lock input-icon"></i>
+                    <input id="senha" type="password" placeholder="Crie uma Senha*" required>
+                    <i class="fa-regular fa-eye toggle-password" id="togglePasswordIcon"></i>
+                </div>
+
+                <div class="input-group">
+                    <i class="fa-solid fa-lock input-icon"></i>
+                    <input id="confirmarSenha" type="password" placeholder="Confirmar Senha*" required>
+                    <i class="fa-regular fa-eye toggle-password" id="toggleConfirmPasswordIcon"></i>
+                </div>
+
+                <button type="submit">Cadastrar</button>
+            </form>
+            <div class="link">
+                <p>Já tem uma conta? <a href="login.html">Faça login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Preloader ao carregar a página
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('preloader');
+            preloader.classList.add('hide');
+            setTimeout(() => preloader.style.display = 'none', 500);
+        });
+
+        // Máscara de CNPJ
+        function mascaraCNPJ(cnpj) {
+            cnpj = cnpj.replace(/\D/g, '');
+            cnpj = cnpj.replace(/^(\d{2})(\d)/, '$1.$2');
+            cnpj = cnpj.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+            cnpj = cnpj.replace(/\.(\d{3})(\d)/, '.$1/$2');
+            cnpj = cnpj.replace(/(\d{4})(\d)/, '$1-$2');
+            return cnpj.substring(0, 18);
+        }
+
+        document.getElementById('cnpj').addEventListener('input', function (e) {
+            e.target.value = mascaraCNPJ(e.target.value);
+        });
+
+        // Máscara de WhatsApp
+        function mascaraWhatsApp(whatsapp) {
+            whatsapp = whatsapp.replace(/\D/g, ''); // Remove todos os caracteres não numéricos
+            whatsapp = whatsapp.replace(/^(\d{2})(\d)/g, '($1) $2'); // Coloca parênteses em volta dos dois primeiros dígitos
+            whatsapp = whatsapp.replace(/(\d{5})(\d)/, '$1-$2'); // Coloca hífen entre o quinto e o sexto dígito
+            return whatsapp.substring(0, 15); // Limita o tamanho máximo (considerando (XX) XXXXX-XXXX)
+        }
+
+        document.getElementById('whatsapp').addEventListener('input', function(e) {
+            e.target.value = mascaraWhatsApp(e.target.value);
+        });
+
+        // Função para alternar visibilidade da senha
+        function setupPasswordToggle(inputId, toggleIconId) {
+            const passwordInput = document.getElementById(inputId);
+            const toggleIcon = document.getElementById(toggleIconId);
+
+            toggleIcon.addEventListener('click', () => {
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    toggleIcon.classList.remove('fa-eye');
+                    toggleIcon.classList.add('fa-eye-slash');
+                } else {
+                    passwordInput.type = 'password';
+                    toggleIcon.classList.remove('fa-eye-slash');
+                    toggleIcon.classList.add('fa-eye');
+                }
+            });
+        }
+
+        // Configura alternância para ambos os campos de senha
+        setupPasswordToggle('senha', 'togglePasswordIcon');
+        setupPasswordToggle('confirmarSenha', 'toggleConfirmPasswordIcon');
+
+        // Validação de senha
+        document.getElementById('formCadastro').addEventListener('submit', function(e) {
+            const senha = document.getElementById('senha').value;
+            const confirmarSenha = document.getElementById('confirmarSenha').value;
+            if (senha !== confirmarSenha) {
+                e.preventDefault();
+                alert('As senhas não coincidem. Por favor, verifique.');
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Licitações Aqui</title>
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@700&family=Archivo+Black&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="favicoin.svg">
+    <style>
+        /* --- Preloader --- */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.5s ease, visibility 0s linear 0.5s;
+        }
+        #preloader.hide {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .loader-container {
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+        .loader-ring {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 80px;
+            height: 80px;
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #E66E00;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        .loader-logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 40px;
+            height: 40px;
+            transform: translate(-50%, -50%);
+            animation: rotateLogo 2s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes rotateLogo {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* --- Página de login --- */
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .left-panel {
+            flex: 1;
+            background-image: url('image.login.png');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end; /* Mantém o conteúdo na parte inferior */
+            padding: 30px;
+            box-sizing: border-box;
+            position: relative;
+            color: white;
+        }
+
+        .left-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent 70%);
+            z-index: 1;
+        }
+
+        .left-panel-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* O estilo .left-panel-logo foi removido */
+
+        .left-panel h2 {
+            font-size: 30px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .left-panel p {
+            font-size: 16px;
+            margin-bottom: 0;
+        }
+
+        .right-panel {
+            width: 450px;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo {
+            display: inline-block;
+            text-decoration: none;
+            color: #011632;
+            margin-bottom: 30px;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+        .logo:hover {
+            transform: scale(1.1);
+        }
+        .licita {
+            font-family: 'League Spartan', sans-serif;
+            font-weight: 700;
+            font-size: 30px;
+            line-height: 1;
+            display: inline-block;
+            position: relative;
+        }
+        .aqui {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 14px;
+            text-transform: uppercase;
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            transform: translate(15%, 50%);
+            color: #E66E00;
+        }
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        /* Estilos para o grupo de input com ícones (aplicados a login.html também) */
+        .input-group {
+            position: relative;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 12px 12px 45px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border 0.3s ease;
+            box-sizing: border-box;
+            height: 45px;
+        }
+
+        /* Foco dos inputs */
+        .input-group input:focus {
+            border: 2px solid #E66E00;
+            outline: none;
+        }
+
+        /* Ícone dentro do input (à esquerda) */
+        .input-group .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            font-size: 16px;
+            pointer-events: none;
+        }
+
+        /* Ícone do olho (à direita) */
+        .input-group .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        /* Ajuste de padding-right para campos de senha para o ícone do olho */
+        input[type="password"] {
+            padding-right: 45px;
+        }
+
+        .forgot-password-link {
+            text-align: right;
+            margin-top: -10px;
+            margin-bottom: 15px;
+            font-size: 13px;
+        }
+
+        .forgot-password-link a {
+            color: #E66E00;
+            text-decoration: none;
+        }
+
+        .forgot-password-link a:hover {
+            text-decoration: underline;
+        }
+
+        .erro {
+            color: red;
+            font-size: 12px;
+            margin-top: -8px;
+            margin-bottom: 8px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #E66E00;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #c35a00;
+        }
+
+        .link {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 14px;
+        }
+        .link p {
+            margin: 0;
+        }
+        .link a {
+            color: #E66E00;
+            text-decoration: none;
+        }
+        .link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div id="preloader">
+        <div class="loader-container">
+            <div class="loader-ring"></div>
+            <img src="favicoin.svg" alt="Favicon girando" class="loader-logo">
+        </div>
+    </div>
+
+    <div class="left-panel">
+        <div class="left-panel-content">
+            <h2>Obrigado por fazer parte <br> de nosso ecossistema.</h2>
+            <p>Que 2026 seja de grandes conquistas!</p>
+        </div>
+    </div>
+
+    <div class="right-panel">
+        <a href="index.html" class="logo">
+            <span class="licita">Licitações</span>
+            <span class="aqui">AQUI</span>
+        </a>
+
+        <div class="login-container">
+            <form action="#" method="post" onsubmit="return validarCNPJ()">
+                <div class="input-group">
+                    <i class="fa-solid fa-building input-icon"></i>
+                    <input id="cnpj" type="text" placeholder="Digite seu CNPJ" maxlength="18" required>
+                </div>
+                <div id="erroCnpj" class="erro"></div>
+
+                <div class="input-group">
+                    <i class="fa-solid fa-lock input-icon"></i>
+                    <input id="senha" type="password" placeholder="Digite sua senha" required>
+                    <i class="fa-regular fa-eye toggle-password" id="togglePasswordIcon"></i>
+                </div>
+                <div class="forgot-password-link">
+                    <a href="#">Esqueceu sua senha?</a>
+                </div>
+
+                <button type="submit">Entrar</button>
+            </form>
+            <div class="link">
+                <p>Ainda não tem uma conta? <a href="cadastro.html">Crie uma AGORA!</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Preloader ao carregar a página
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('preloader');
+            preloader.classList.add('hide');
+            setTimeout(() => preloader.style.display = 'none', 500);
+        });
+
+        // Máscara de CNPJ ao digitar
+        document.getElementById("cnpj").addEventListener("input", function(e) {
+            let value = e.target.value.replace(/\D/g, "");
+            value = value.replace(/^(\d{2})(\d)/, "$1.$2");
+            value = value.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
+            value = value.replace(/\.(\d{3})(\d)/, ".$1/$2");
+            value = value.replace(/(\d{4})(\d)/, "$1-$2");
+            e.target.value = value;
+        });
+
+        // Validação de CNPJ
+        function validarCNPJ() {
+            const cnpjInput = document.getElementById("cnpj");
+            const erroDiv = document.getElementById("erroCnpj");
+            const cnpjLimpo = cnpjInput.value.replace(/[^\d]/g, '');
+
+            if (cnpjLimpo.length !== 14) {
+                erroDiv.textContent = "CNPJ inválido ou incompleto.";
+                cnpjInput.style.border = "2px solid red";
+                return false;
+            }
+            erroDiv.textContent = "";
+            cnpjInput.style.border = "1px solid #ccc";
+            return true;
+        }
+
+        // Mostrar / ocultar senha com Font Awesome
+        const togglePasswordIcon = document.getElementById('togglePasswordIcon');
+        const senhaInput = document.getElementById('senha');
+
+        togglePasswordIcon.addEventListener('click', () => {
+            if (senhaInput.type === 'password') {
+                senhaInput.type = 'text';
+                togglePasswordIcon.classList.remove('fa-eye');
+                togglePasswordIcon.classList.add('fa-eye-slash');
+            } else {
+                senhaInput.type = 'password';
+                togglePasswordIcon.classList.remove('fa-eye-slash');
+                togglePasswordIcon.classList.add('fa-eye');
+            }
+        });
+    </script>
+
+</body>
+</html>
